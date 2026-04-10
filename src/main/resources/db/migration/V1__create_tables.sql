@@ -38,7 +38,7 @@ INSERT INTO usuarios (nome, email, senha, tipo, created_at)
 VALUES (
            'Diego Santana Estevao',
            'ds1368833@gmail.com',
-           '$2a$10$8F7bAAiUoO.tTJ6ymgmhNO/AGj6zZLNJXi.r6IEw1LIIetGsxXIcm',
+           '$2a$10$OfTOflIM0iAAJxORRwfsKeV1otBQuxHiaum3WOmITzdjNZ.LCIE8q',
            'ADMIN',
            NOW()
        ) ON CONFLICT (email) DO NOTHING;
@@ -61,7 +61,7 @@ INSERT INTO produtos (nome, descricao, preco, imagem, disponivel, categoria) VAL
 ('Bolo de Chocolate', 'Fatia generosa de bolo', 4.50, 'https://via.placeholder.com/200', true, 'Doces')
 ON CONFLICT DO NOTHING;
 
-UPDATE usuarios SET senha = '$2a$10$8F7bAAiUoO.tTJ6ymgmhNO/AGj6zZLNJXi.r6IEw1LIIetGsxXIcm' WHERE email = 'ds1368833@gmail.com';
+UPDATE usuarios SET senha = '$2a$10$OfTOflIM0iAAJxORRwfsKeV1otBQuxHiaum3WOmITzdjNZ.LCIE8q' WHERE email = 'ds1368833@gmail.com';
 
 UPDATE usuarios SET senha = '$2a$10$8F7bAAiUoO.tTJ6ymgmhNO/AGj6zZLNJXi.r6IEw1LIIetGsxXIcm' WHERE email = 'italocardoso15@icloud.com';
 
