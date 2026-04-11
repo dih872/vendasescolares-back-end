@@ -33,7 +33,7 @@ comentario TEXT,
 data TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Inserir usuário admin (senha: 1234)
+-- Inserir usuário admin
 INSERT INTO usuarios (nome, email, senha, tipo, created_at)
 VALUES (
            'Diego Santana Estevao',
@@ -45,13 +45,21 @@ VALUES (
 
 INSERT INTO usuarios (nome, email, senha, tipo, created_at)
 VALUES (
-           'Italo Cardoso da Silva',
-           'italocardoso15@icloud.com',
-           '$2a$10$8F7bAAiUoO.tTJ6ymgmhNO/AGj6zZLNJXi.r6IEw1LIIetGsxXIcm',
+           'Ana Vitoria de Araujo',
+           'Anav72833@gmail.com',
+           '$2a$10$fAl3mChiVaSHg8lFyYudCejBzeO/bZ1SDAOfzRgUcwgT4nTfiZmAa',
            'ADMIN',
            NOW()
        ) ON CONFLICT (email) DO NOTHING;
 
+INSERT INTO usuarios (nome, email, senha, tipo, created_at)
+VALUES (
+           'Laura Barbosa Clemente',
+           'laurabarbosacl332@gmail.com',
+           '$2a$10$gpJRJ/3N40mwGn2pCTA5JeFx6KnfpO6ucKLLi5mryVWkLHOtbHP/G',
+           'ADMIN',
+           NOW()
+       ) ON CONFLICT (email) DO NOTHING;
 
 -- Inserir produtos de exemplo
 INSERT INTO produtos (nome, descricao, preco, imagem, disponivel, categoria) VALUES
@@ -63,7 +71,10 @@ ON CONFLICT DO NOTHING;
 
 UPDATE usuarios SET senha = '$2a$10$OfTOflIM0iAAJxORRwfsKeV1otBQuxHiaum3WOmITzdjNZ.LCIE8q' WHERE email = 'ds1368833@gmail.com';
 
-UPDATE usuarios SET senha = '$2a$10$8F7bAAiUoO.tTJ6ymgmhNO/AGj6zZLNJXi.r6IEw1LIIetGsxXIcm' WHERE email = 'italocardoso15@icloud.com';
+UPDATE usuarios SET senha = '$2a$10$fAl3mChiVaSHg8lFyYudCejBzeO/bZ1SDAOfzRgUcwgT4nTfiZmAa' WHERE email = 'Anav72833@gmail.com';
+
+UPDATE usuarios set senha = '$2a$10$gpJRJ/3N40mwGn2pCTA5JeFx6KnfpO6ucKLLi5mryVWkLHOtbHP/G' where email ='laurabarbosacl332@gmail.com'
+
 
 
 
