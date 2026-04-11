@@ -41,15 +41,11 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                // Rotas públicas
                 .antMatchers(HttpMethod.GET, "/api/cardapio/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/feedbacks/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/feedbacks").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-
-                // Rotas de admin - apenas ADMIN
                 .antMatchers("/api/admin/**").hasAuthority("ADMIN")
-
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -60,7 +56,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "https://vendasescolares-front-end.vercel.app"
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
@@ -70,7 +70,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(
