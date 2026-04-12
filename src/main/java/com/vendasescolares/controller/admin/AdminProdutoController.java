@@ -42,6 +42,8 @@ public class AdminProdutoController {
 
     @PostMapping
     public ResponseEntity<Produto> criar(@RequestBody Produto produto) {
+        produto.setId(null);
+        produto.setCreatedAt(null);
         return ResponseEntity.ok(produtoRepository.save(produto));
     }
 
@@ -49,8 +51,13 @@ public class AdminProdutoController {
     public ResponseEntity<Produto> atualizar(@PathVariable Long id, @RequestBody Produto produto) {
         return produtoRepository.findById(id)
                 .map(p -> {
-                    produto.setId(id);
-                    return ResponseEntity.ok(produtoRepository.save(produto));
+                    p.setNome(produto.getNome());
+                    p.setDescricao(produto.getDescricao());
+                    p.setPreco(produto.getPreco());
+                    p.setImagem(produto.getImagem());
+                    p.setDisponivel(produto.getDisponivel());
+                    p.setCategoria(produto.getCategoria());
+                    return ResponseEntity.ok(produtoRepository.save(p));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
