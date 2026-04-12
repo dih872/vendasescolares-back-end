@@ -29,6 +29,7 @@ public class Produto {
     @Column(nullable = false)
     private BigDecimal preco;
 
+    @Column(length = 2000)
     private String imagem;
 
     private Boolean disponivel = true;
