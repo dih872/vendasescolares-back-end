@@ -15,7 +15,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/admin/produtos")
 @PreAuthorize("hasAuthority('ADMIN')")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://vendasescolares-front-end.vercel.app"
+})
 @RequiredArgsConstructor
 public class AdminProdutoController {
 

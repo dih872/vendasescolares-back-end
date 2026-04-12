@@ -34,7 +34,8 @@ public class Produto {
     private Boolean disponivel = true;
 
     private String categoria;
+
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 }
