@@ -4,30 +4,54 @@ import com.vendasescolares.model.Lancamento;
 import com.vendasescolares.repository.LancamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/lancamentos")
-@CrossOrigin(origins = "http://localhost:3000")
+@PreAuthorize("hasAuthority('ADMIN')")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://vendasescolares.vercel.app"
+})
 @RequiredArgsConstructor
 public class LancamentoController {
 
+    private static final ZoneId FUSO = ZoneId.of("America/Recife");
+
     private final LancamentoRepository lancamentoRepository;
+
+    private LocalDateTime inicioDoDia() {
+        return LocalDate.now(FUSO).atStartOfDay();
+    }
+
+    private LocalDateTime fimDoDia() {
+        return LocalDate.now(FUSO).atTime(23, 59, 59);
+    }
 
     @GetMapping
     public ResponseEntity<List<Lancamento>> listar() {
-        return ResponseEntity.ok(lancamentoRepository.findAllByOrderByCreatedAtDesc());
+        return ResponseEntity.ok(
+                lancamentoRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(inicioDoDia(), fimDoDia())
+        );
     }
 
     @GetMapping("/totais")
     public ResponseEntity<Map<String, BigDecimal>> totais() {
-        BigDecimal receitas = lancamentoRepository.somarPorTipo("receita");
-        BigDecimal despesas = lancamentoRepository.somarPorTipo("despesa");
+        LocalDateTime inicio = inicioDoDia();
+        LocalDateTime fim = fimDoDia();
+
+        BigDecimal receitas = lancamentoRepository.somarPorTipoEPeriodo("receita", inicio, fim);
+        BigDecimal despesas = lancamentoRepository.somarPorTipoEPeriodo("despesa", inicio, fim);
         BigDecimal lucro = receitas.subtract(despesas);
 
         Map<String, BigDecimal> totais = new HashMap<>();
@@ -40,12 +64,17 @@ public class LancamentoController {
 
     @PostMapping
     public ResponseEntity<Lancamento> criar(@RequestBody Lancamento lancamento) {
+        lancamento.setId(null);
+        lancamento.setCreatedAt(ZonedDateTime.now(FUSO).toLocalDateTime());
         return ResponseEntity.ok(lancamentoRepository.save(lancamento));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        lancamentoRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+        if (lancamentoRepository.existsById(id)) {
+            lancamentoRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

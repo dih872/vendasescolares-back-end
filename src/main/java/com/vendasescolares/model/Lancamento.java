@@ -3,7 +3,6 @@ package com.vendasescolares.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -26,7 +25,6 @@ public class Lancamento {
     @Column(nullable = false)
     private BigDecimal valor;
 
-    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 }
