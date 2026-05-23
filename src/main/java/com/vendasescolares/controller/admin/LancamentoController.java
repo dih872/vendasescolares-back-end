@@ -8,8 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -30,28 +28,15 @@ public class LancamentoController {
 
     private final LancamentoRepository lancamentoRepository;
 
-    private LocalDateTime inicioDoDia() {
-        return LocalDate.now(FUSO).atStartOfDay();
-    }
-
-    private LocalDateTime fimDoDia() {
-        return LocalDate.now(FUSO).atTime(23, 59, 59);
-    }
-
     @GetMapping
     public ResponseEntity<List<Lancamento>> listar() {
-        return ResponseEntity.ok(
-                lancamentoRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(inicioDoDia(), fimDoDia())
-        );
+        return ResponseEntity.ok(lancamentoRepository.findAllByOrderByCreatedAtDesc());
     }
 
     @GetMapping("/totais")
     public ResponseEntity<Map<String, BigDecimal>> totais() {
-        LocalDateTime inicio = inicioDoDia();
-        LocalDateTime fim = fimDoDia();
-
-        BigDecimal receitas = lancamentoRepository.somarPorTipoEPeriodo("receita", inicio, fim);
-        BigDecimal despesas = lancamentoRepository.somarPorTipoEPeriodo("despesa", inicio, fim);
+        BigDecimal receitas = lancamentoRepository.somarPorTipo("receita");
+        BigDecimal despesas = lancamentoRepository.somarPorTipo("despesa");
         BigDecimal lucro = receitas.subtract(despesas);
 
         Map<String, BigDecimal> totais = new HashMap<>();
